@@ -4,16 +4,15 @@ baseUrl: ${DATAHUB_BASE_URL:http://localhost:9002}
 # App Layer
 authentication:
   # Enable if you want all requests to the Metadata Service to be authenticated. Disabled by default.
-  enabled: ${METADATA_SERVICE_AUTH_ENABLED:false}
+  enabled: true
 
   # Required if enabled is true! A configurable chain of Authenticators
   authenticators:
     # Required for authenticating requests with DataHub-issued Access Tokens - best not to remove.
-    - type: com.datahub.authentication.authenticator.DataHubTokenAuthenticator
+    - type: com.datahub.authentication.authenticator.DataHubJwtTokenAuthenticator 
       configs:
-        # Key used to validate incoming tokens. Should typically be the same as authentication.tokenService.signingKey
-        signingKey: ${DATAHUB_TOKEN_SERVICE_SIGNING_KEY:WnEdIeTG/VVCLQqGwC/BAkqyY0k+H8NEAtWGejrBI94=}
-        salt: ${DATAHUB_TOKEN_SERVICE_SALT:ohDVbJBvHHVJh9S/UA4BYF9COuNnqqVhr9MLKEGXk1O=}
+         userIdClaim: "sub" // default value is "aud"
+         trustedIssuers: ['http://localhost:8084/realms/AIAMO']
     # Required for unauthenticated health check endpoints - best not to remove.
     - type: com.datahub.authentication.authenticator.HealthStatusAuthenticator
 
